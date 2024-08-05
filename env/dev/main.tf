@@ -39,13 +39,20 @@ module "extended_auditing_policy" {
   retention_in_days                       = 90
 }
 
-module "storage" {
-  source                   = "../../modules/storage"
-  storage_account_name     = "storage${local.app}dev"
+module "storage_account" {
+  source                   = "../../modules/storage_account"
+  storage_account_name     = "st${local.app}dev"
   account_tier             = "Standard"
   account_replication_type = "LRS"
   min_tls_version          = "TLS1_2"
   location                 = local.location.main
   resource_group_name      = local.resource_group.name
   tags                     = local.tags
+}
+
+module "storage_container" {
+  source                 = "../../modules/storage_container"
+  storage_account_name   = module.storage_account.storage_account_name
+  storage_container_name = "container-${local.app}-dev"
+  container_access_type  = "private"
 }

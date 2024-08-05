@@ -8,8 +8,3 @@ resource "azurerm_storage_account" "storage" {
   tags                     = var.tags
 }
 
-resource "azurerm_storage_container" "storage" {
-  name                  = var.storage_container_name
-  storage_account_name  = azurerm_storage_account.storage.name
-  container_access_type = "private"
-}
