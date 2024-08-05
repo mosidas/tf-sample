@@ -24,6 +24,9 @@ resource "azurerm_mssql_server" "example" {
   version                      = "12.0"
   administrator_login          = var.sql_database_id
   administrator_login_password = var.sql_database_admin_password
+  tags = {
+    environment = "dev"
+  }
 }
 
 resource "azurerm_mssql_database" "example" {
