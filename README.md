@@ -1,5 +1,20 @@
 # tf-sample
-tf-sample
+
+## install
+
+- terraform
+- tfsec
+- azure-cli
+- vscode
+  - hashicorp.terraform
+
+## check
+
+```bash
+tfsec .
+```
+
+## execute
 
 ```bash
 cd env/{env}

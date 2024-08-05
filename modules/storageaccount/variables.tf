@@ -1,5 +1,6 @@
 variable "storage_account_name" {}
 variable "storage_container_name" {}
+variable "min_tls_version" {}
 variable "account_tier" {}
 variable "account_replication_type" {}
 variable "location" {}
