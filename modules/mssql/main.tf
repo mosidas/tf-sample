@@ -5,7 +5,7 @@ resource "azurerm_mssql_server" "db" {
   version                       = var.database_version
   administrator_login           = var.sql_database_id
   administrator_login_password  = var.sql_database_admin_password
-  public_network_access_enabled = false
+  public_network_access_enabled = true
   minimum_tls_version           = var.minimum_tls_version
   tags                          = var.tags
 }
