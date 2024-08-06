@@ -9,6 +9,13 @@ resource "random_id" "app" {
   byte_length = 8
 }
 
+module "app_insights" {
+  source              = "../../modules/application_insight"
+  app_insights_name   = "appi-${local.app}-dev-${random_id.app.id}"
+  location            = local.location.main
+  resource_group_name = module.resourcegroup.resource_group_name
+}
+
 module "webapp" {
   source                = "../../modules/webapp"
   app_service_plan_name = "asp-${local.app}-dev"
@@ -19,7 +26,12 @@ module "webapp" {
   dotnet_version        = "v8.0"
   location              = local.location.main
   resource_group_name   = module.resourcegroup.resource_group_name
-  tags                  = local.tags
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY"             = module.app_insights.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = module.app_insights.connection_string
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+  }
+  tags = local.tags
 }
 
 module "mssql_server" {

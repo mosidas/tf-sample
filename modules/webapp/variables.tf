@@ -6,5 +6,5 @@ variable "app_insights_name" {}
 variable "os_type" {}
 variable "sku_name" {}
 variable "dotnet_version" {}
-
+variable "app_settings" {}
 variable "tags" {}
