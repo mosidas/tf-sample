@@ -12,7 +12,7 @@ resource "azurerm_network_security_group" "vm" {
     protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "3389"
-    source_address_prefix      = "*"
+    source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "*"
   }
   security_rule {
@@ -23,7 +23,7 @@ resource "azurerm_network_security_group" "vm" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "*"
   }
 }

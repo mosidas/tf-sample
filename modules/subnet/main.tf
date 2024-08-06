@@ -1,18 +1,3 @@
-variable "name" {}
-variable "vnet_name" {}
-variable "location" {}
-variable "resource_group_name" {}
-variable "address_prefixes" {
-  type    = list(string)
-  default = ["10.0.0.0/24"]
-}
-variable "delegation_name" {}
-variable "service_delegation_name" {}
-variable "service_delegation_actions" {
-  type    = list(string)
-  default = ["Microsoft.Web/serverFarms"]
-}
-
 resource "azurerm_subnet" "subnet" {
   name                 = var.name
   resource_group_name  = var.resource_group_name
@@ -23,15 +8,10 @@ resource "azurerm_subnet" "subnet" {
   dynamic "delegation" {
     for_each = var.delegation_name != "" ? [var.delegation_name] : []
     content {
-      name = service_delegation.value
+      name = "delegation-${var.name}"
       service_delegation {
-        name    = var.service_delegation_name
-        actions = var.service_delegation_actions
+        name = var.service_delegation_name
       }
     }
   }
-}
-
-output "name" {
-  value = azurerm_subnet.subnet.name
 }

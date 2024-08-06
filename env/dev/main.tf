@@ -131,8 +131,8 @@ module "subnet" {
   source = "../../modules/subnet"
 
   for_each = {
-    subnet1 = { name = "subnet-${local.app}-dev-001", address_prefixes = ["10.0.1.0/24"] }
-    subnet2 = { name = "subnet-${local.app}-dev-002", address_prefixes = ["10.0.2.0/24"] }
+    subnet1 = { name = "subnet-${local.app}-dev-001", address_prefixes = ["10.0.1.0/24"], delegation_name = "", service_delegation_name = "", service_delegation_actions = [] }
+    subnet2 = { name = "subnet-${local.app}-dev-002", address_prefixes = ["10.0.2.0/24"], delegation_name = "", service_delegation_name = "", service_delegation_actions = [] }
     subnet3 = { name = "subnet-${local.app}-dev-003", address_prefixes = ["10.0.3.0/24"], delegation_name = "delegation-${local.app}-dev", service_delegation_name = "Microsoft.Web/serverFarms", service_delegation_actions = ["Microsoft.Web/serverFarms"] }
   }
 
@@ -155,7 +155,7 @@ module "vnet_integration" {
 module "vm" {
   source                = "../../modules/vm_windows11"
   name                  = "vm-${local.app}-dev"
-  user_name             = "admin"
+  user_name             = "${local.app}admin"
   password              = var.vm_password
   location              = local.location.main
   resource_group_name   = module.resourcegroup.resource_group_name
@@ -167,4 +167,14 @@ module "vm" {
   storage_account_type  = "Standard_LRS"
   primary_blob_endpoint = module.storage_account.primary_blob_endpoint
   tags                  = local.tags
+}
+
+module "bastion" {
+  source               = "../../modules/bastion"
+  name                 = "bastion-${local.app}-dev"
+  resource_group_name  = module.resourcegroup.resource_group_name
+  location             = local.location.main
+  virtual_network_name = module.vnet.name
+  pip_name             = "pip-${local.app}-dev"
+  bastion_sku          = "Standard"
 }
