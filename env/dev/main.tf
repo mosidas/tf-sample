@@ -31,7 +31,27 @@ module "webapp" {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"      = module.app_insights.connection_string
     "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
   }
-  tags = local.tags
+  connection_string_name  = "SQLAZURECONNSTR"
+  connection_string_type  = "SQLAzure"
+  connection_string_value = module.mssql_server.sql_connection_string
+  tags                    = local.tags
+}
+
+module "webapp_slot" {
+  source         = "../../modules/webapp_slot"
+  slot_name      = "stg"
+  app_service_id = module.webapp.app_service_id
+  dotnet_version = "v8.0"
+  location       = local.location.main
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY"             = module.app_insights.instrumentation_key
+    "APPLICATIONINSIGHTS_CONNECTION_STRING"      = module.app_insights.connection_string
+    "ApplicationInsightsAgent_EXTENSION_VERSION" = "~3"
+  }
+  connection_string_name  = "SQLAZURECONNSTR"
+  connection_string_type  = "SQLAzure"
+  connection_string_value = module.mssql_server.sql_connection_string
+  tags                    = local.tags
 }
 
 module "mssql_server" {

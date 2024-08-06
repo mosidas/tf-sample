@@ -12,6 +12,11 @@ resource "azurerm_windows_web_app" "webapp" {
   resource_group_name = var.resource_group_name
   service_plan_id     = azurerm_service_plan.webapp.id
   app_settings        = var.app_settings
+  connection_string {
+    name  = var.connection_string_name
+    type  = var.connection_string_type
+    value = var.connection_string_value
+  }
   site_config {
     always_on = true
     application_stack {
