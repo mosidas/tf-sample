@@ -54,6 +54,24 @@ module "webapp_slot" {
   tags                    = local.tags
 }
 
+resource "random_id" "front_door" {
+  byte_length = 8
+}
+
+module "front_door" {
+  source                       = "../../modules/front_door"
+  location                     = local.location.main
+  resource_group_name          = module.resourcegroup.resource_group_name
+  profile_name                 = "fd-${local.app}-dev-001"
+  front_door_sku_name          = "Standard_AzureFrontDoor"
+  endpoint_name                = "ep-${local.app}-dev.${lower(random_id.front_door.hex)}"
+  front_door_origin_group_name = "fd-og-${local.app}-dev"
+  front_door_origin_name       = "fd-origin-${local.app}-dev"
+  webapp_default_hostname      = module.webapp.default_hostname
+  front_door_route_name        = "fd-route-${local.app}-dev"
+  tags                         = local.tags
+}
+
 module "mssql_server" {
   source                        = "../../modules/mssql"
   sql_server_name               = "sql-${local.app}-dev"
