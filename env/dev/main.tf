@@ -152,4 +152,19 @@ module "vnet_integration" {
   subnet_id      = module.subnet.subnet3.id
 }
 
-
+module "vm" {
+  source                = "../../modules/vm_windows11"
+  name                  = "vm-${local.app}-dev"
+  user_name             = "admin"
+  password              = var.vm_password
+  location              = local.location.main
+  resource_group_name   = module.resourcegroup.resource_group_name
+  nic_name              = "nic-${local.app}-dev"
+  nsg_name              = "nsg-${local.app}-dev"
+  ip_configuration_name = "ipconfig-${local.app}-dev"
+  subnet_id             = module.subnet.subnet1.id
+  vm_size               = "Standard_B1s"
+  storage_account_type  = "Standard_LRS"
+  primary_blob_endpoint = module.storage_account.primary_blob_endpoint
+  tags                  = local.tags
+}
