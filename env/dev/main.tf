@@ -118,3 +118,38 @@ module "storage_container" {
   storage_container_name = "container-${local.app}-dev"
   container_access_type  = "private"
 }
+
+module "vnet" {
+  source              = "../../modules/vnet"
+  name                = "vnet-${local.app}-dev"
+  location            = local.location.main
+  resource_group_name = module.resourcegroup.resource_group_name
+  address_space       = ["10.0.0.0/16"]
+}
+
+module "subnet" {
+  source = "../../modules/subnet"
+
+  for_each = {
+    subnet1 = { name = "subnet-${local.app}-dev-001", address_prefixes = ["10.0.1.0/24"] }
+    subnet2 = { name = "subnet-${local.app}-dev-002", address_prefixes = ["10.0.2.0/24"] }
+    subnet3 = { name = "subnet-${local.app}-dev-003", address_prefixes = ["10.0.3.0/24"], delegation_name = "delegation-${local.app}-dev", service_delegation_name = "Microsoft.Web/serverFarms", service_delegation_actions = ["Microsoft.Web/serverFarms"] }
+  }
+
+  name                       = each.value.name
+  vnet_name                  = module.vnet.name
+  location                   = local.location.main
+  resource_group_name        = module.resourcegroup.resource_group_name
+  address_prefixes           = each.value.address_prefixes
+  delegation_name            = each.value.delegation_name
+  service_delegation_name    = each.value.service_delegation_name
+  service_delegation_actions = each.value.service_delegation_actions
+}
+
+module "vnet_integration" {
+  source         = "../../modules/vnet_integration"
+  app_service_id = module.webapp.app_service_id
+  subnet_id      = module.subnet.subnet3.id
+}
+
+
