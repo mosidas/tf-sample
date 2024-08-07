@@ -109,6 +109,7 @@ module "storage_account" {
   min_tls_version          = "TLS1_2"
   location                 = local.location.main
   resource_group_name      = module.resourcegroup.resource_group_name
+  subnet_ids               = [module.subnet.subnet1.id]
   tags                     = local.tags
 }
 
@@ -152,16 +153,13 @@ module "vnet_integration" {
   subnet_id      = module.subnet.subnet3.id
 }
 
-module "vm" {
+module "vm_windows11" {
   source                = "../../modules/vm_windows11"
   name                  = "vm-${local.app}-dev"
   user_name             = "${local.app}admin"
   password              = var.vm_password
   location              = local.location.main
   resource_group_name   = module.resourcegroup.resource_group_name
-  nic_name              = "nic-${local.app}-dev"
-  nsg_name              = "nsg-${local.app}-dev"
-  ip_configuration_name = "ipconfig-${local.app}-dev"
   subnet_id             = module.subnet.subnet1.id
   vm_size               = "Standard_B1s"
   storage_account_type  = "Standard_LRS"

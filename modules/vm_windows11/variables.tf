@@ -1,11 +1,8 @@
 variable "name" {}
 variable "user_name" {}
 variable "password" {}
-variable "nic_name" {}
-variable "nsg_name" {}
 variable "location" {}
 variable "resource_group_name" {}
-variable "ip_configuration_name" {}
 variable "subnet_id" {}
 variable "vm_size" {}
 variable "storage_account_type" {}

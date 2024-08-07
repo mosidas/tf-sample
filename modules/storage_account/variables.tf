@@ -4,4 +4,7 @@ variable "account_tier" {}
 variable "account_replication_type" {}
 variable "location" {}
 variable "resource_group_name" {}
+variable "subnet_ids" {
+  type = list(string)
+}
 variable "tags" {}
